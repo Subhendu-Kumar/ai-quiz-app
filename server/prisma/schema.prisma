@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  username  String
+  email     String   @unique
+  password  String
+  avatar    String   @default("https://res.cloudinary.com/dzifzjy5a/image/upload/v1730063602/d6jgofrttwkmincxynqh.jpg")
+  role      Role
+  quizzes   Quiz[]   @relation("QuizCreator")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Quiz {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  quiz_type   String
+  creatorId   String
+  creator     User       @relation("QuizCreator", fields: [creatorId], references: [id])
+  questions   Question[] @relation("QuizQuestions")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Question {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  quizId   String
+  quiz     Quiz     @relation("QuizQuestions", fields: [quizId], references: [id])
+  text     String
+  type     QuestionType
+  options  String[]
+  answer   Int
+}
+
+enum Role {
+  USER
+  CREATOR
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+}
