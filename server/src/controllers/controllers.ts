@@ -249,3 +249,187 @@ export const getAllQuizesPaginated = async (
     });
   }
 };
+
+export const getRecentQuizes = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const user = (req as any).user;
+  let quizes;
+  try {
+    if (user.role === "CREATOR") {
+      quizes = await prisma.quiz.findMany({
+        where: {
+          creatorId: user.id,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 5,
+      });
+    } else {
+      quizes = await prisma.quiz.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 5,
+      });
+    }
+    if (!quizes || quizes.length === 0) {
+      res.json({ success: false, message: "No quizes found!!!" });
+      return;
+    }
+    res.json({ success: true, message: "quiz retrived successfully!", quizes });
+  } catch (error) {
+    console.error(error);
+    res.json({
+      success: false,
+      message: "Internal server error",
+      error,
+    });
+  }
+};
+
+export const getQuizeById = async (
+  req: Request<{ quizId: string }>,
+  res: Response
+): Promise<void> => {
+  const { quizId } = req.params;
+  if (!quizId) {
+    res.json({ success: false, message: "quiz id not provided!!" });
+    return;
+  }
+  try {
+    const quiz = await prisma.quiz.findUnique({
+      where: {
+        id: quizId,
+      },
+      include: {
+        questions: true,
+      },
+    });
+    if (!quiz) {
+      res.json({ success: false, message: "quiz not found with this id!!" });
+      return;
+    }
+    res.json({ success: true, message: "quiz fetched successfully", quiz });
+  } catch (error) {
+    console.error(error);
+    res.json({
+      success: false,
+      message: "Internal server error",
+      error,
+    });
+  }
+};
+
+export const attemptQuiz = async (
+  req: Request<{ quizId: string }>,
+  res: Response
+): Promise<void> => {
+  const { quizId } = req.params;
+  const { id: userId } = (req as any).user;
+  if (!quizId) {
+    res.json({ success: false, message: "quiz id not provided!!" });
+    return;
+  }
+  try {
+    const existingAttempt = await prisma.quizAttempt.findFirst({
+      where: {
+        AND: [{ quizId }, { userId }],
+      },
+      include: {
+        responses: true,
+      },
+    });
+    if (existingAttempt) {
+      res.json({
+        success: true,
+        message: "quiz attempted previously!",
+        attempt: existingAttempt,
+      });
+      return;
+    } else {
+      const newAttempt = await prisma.quizAttempt.create({
+        data: {
+          quizId,
+          userId,
+        },
+        select: {
+          id: true,
+          userId: true,
+          quizId: true,
+          score: true,
+          completed: true,
+          attemptedAt: true,
+          updatedAt: true,
+        },
+      });
+      res.json({
+        success: true,
+        message: "quiz attempt created",
+        attempt: newAttempt,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.json({
+      success: false,
+      message: "Internal server error",
+      error,
+    });
+  }
+};
+
+export const submitResponse = async (
+  req: Request<{ attemptId: string }>,
+  res: Response
+): Promise<void> => {
+  try {
+    const { attemptId } = req.params;
+    const { answers } = req.body;
+    if (!answers || !Array.isArray(answers) || answers.length === 0) {
+      res.status(400).json({ message: "Invalid or empty answers array" });
+      return;
+    }
+    const attempt = await prisma.quizAttempt.findUnique({
+      where: { id: attemptId },
+      include: { quiz: { include: { questions: true } } },
+    });
+    if (!attempt) {
+      res.status(404).json({ message: "Quiz attempt not found" });
+      return;
+    }
+    if (attempt.completed) {
+      res.json({ success: false, message: "already submitted response!" });
+      return;
+    }
+    const questionMap = new Map(
+      attempt.quiz.questions.map((q) => [q.id, q.answer])
+    );
+    let score = 0;
+    const responses = answers.map(({ questionId, selectedOption }) => {
+      const correctOption = questionMap.get(questionId);
+      if (correctOption === selectedOption) {
+        score++;
+      }
+      return {
+        attemptId,
+        questionId,
+        selectedOption,
+      };
+    });
+    await prisma.response.createMany({ data: responses });
+    await prisma.quizAttempt.update({
+      where: { id: attemptId },
+      data: { score, completed: true },
+    });
+    res.json({
+      success: true,
+      message: "Responses submitted successfully",
+    });
+  } catch (error) {
+    console.error("Error submitting responses:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

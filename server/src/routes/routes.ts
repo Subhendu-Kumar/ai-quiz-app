@@ -1,8 +1,12 @@
 import {
   signIn,
   signUp,
-  getAllQuizesPaginated,
+  attemptQuiz,
+  getQuizeById,
+  submitResponse,
+  getRecentQuizes,
   createQuizWithAi,
+  getAllQuizesPaginated,
 } from "../controllers/controllers";
 import { Router } from "express";
 import verifyToken from "../services/verify_token";
@@ -15,5 +19,9 @@ router.post("/auth/signin", signIn);
 
 router.post("/create/quiz/ai", verifyToken, createQuizWithAi);
 router.get("/quiz/list/:page", verifyToken, getAllQuizesPaginated);
+router.get("/quiz/recent", verifyToken, getRecentQuizes);
+router.get("/quiz/:quizId", verifyToken, getQuizeById);
+router.post("/quiz/attempt/:quizId", verifyToken, attemptQuiz);
+router.post("/quiz/submit/:attemptId", verifyToken, submitResponse);
 
 export default router;
