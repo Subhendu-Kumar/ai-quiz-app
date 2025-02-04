@@ -1,32 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
 import {
   Card,
-  CardContent,
-  CardDescription,
+  CardTitle,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardContent,
+  CardDescription,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Select,
-  SelectContent,
   SelectItem,
-  SelectTrigger,
   SelectValue,
+  SelectTrigger,
+  SelectContent,
 } from "@/components/ui/select";
-import Files from "react-files";
-import { FaCameraRetro } from "react-icons/fa";
 import axios from "axios";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useToast } from "@/hooks/use-toast";
-import { signUpSchema } from "@/lib/validations";
+import React, { useState } from "react";
 import { SignupFormData } from "@/types";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { FaCameraRetro } from "react-icons/fa";
+import { Button } from "@/components/ui/button";
+import { signUpSchema } from "@/lib/validations";
+import { Skeleton } from "@/components/ui/skeleton";
+// @ts-expect-error dont have type file
+import Files from "react-files";
 
 const SignUp = () => {
   const router = useRouter();
