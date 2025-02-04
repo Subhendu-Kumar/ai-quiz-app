@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -22,7 +22,7 @@ import { useAuth } from "@/context/provider";
 
 const SignIn = () => {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const [signningin, setSignningin] = useState<boolean>(false);
   const [formData, setFormData] = useState<SignInFormData>({
@@ -32,6 +32,12 @@ const SignIn = () => {
   const [errors, setErrors] = useState<
     Partial<Record<keyof SignInFormData, string>>
   >({});
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, router]);
 
   const handleSubmit = async () => {
     const result = signInSchema.safeParse(formData);
