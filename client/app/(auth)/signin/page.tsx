@@ -15,9 +15,16 @@ import { Button } from "@/components/ui/button";
 import { signInSchema } from "@/lib/validations";
 import { SignInFormData } from "@/types";
 import { useRouter } from "next/navigation";
+import { signIn } from "@/api";
+import { useToast } from "@/hooks/use-toast";
+import AlertDialogLoader from "@/components/AlertDialogLoader";
+import { useAuth } from "@/context/provider";
 
 const SignIn = () => {
   const router = useRouter();
+  const { login } = useAuth();
+  const { toast } = useToast();
+  const [signningin, setSignningin] = useState<boolean>(false);
   const [formData, setFormData] = useState<SignInFormData>({
     email: "",
     password: "",
@@ -26,7 +33,7 @@ const SignIn = () => {
     Partial<Record<keyof SignInFormData, string>>
   >({});
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const result = signInSchema.safeParse(formData);
     if (!result.success) {
       const formattedErrors: Partial<Record<keyof SignInFormData, string>> = {};
@@ -45,12 +52,44 @@ const SignIn = () => {
       setErrors(formattedErrors);
     } else {
       setErrors({});
-      console.log("Form data is valid:", formData);
+      setSignningin(true);
+      try {
+        const res = await signIn(result.data);
+        if (res.data.success) {
+          toast({
+            title: "Success",
+            description: res.data.message,
+          });
+          login(res.data.token, res.data.user);
+          // router.push("/signin");
+        } else {
+          toast({
+            title: "Error",
+            description: res.data.message,
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("signup failed", error);
+        toast({
+          title: "Error",
+          description: "something went wrong while signning up!!",
+          variant: "destructive",
+        });
+      } finally {
+        setSignningin(false);
+        setFormData({ email: "", password: "" });
+      }
     }
   };
 
   return (
     <div className="w-full h-screen flex items-center justify-center">
+      <AlertDialogLoader
+        open={signningin}
+        onOpenChange={setSignningin}
+        title="Signning in to Quizlytic"
+      />
       <Card className="w-96">
         <CardHeader>
           <CardTitle>Sign in to Quizlytic</CardTitle>

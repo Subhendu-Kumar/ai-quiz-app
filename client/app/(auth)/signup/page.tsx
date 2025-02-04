@@ -16,6 +16,7 @@ import {
   SelectContent,
 } from "@/components/ui/select";
 import axios from "axios";
+import { signUp } from "@/api";
 import React, { useState } from "react";
 import { SignupFormData } from "@/types";
 import { useRouter } from "next/navigation";
@@ -26,6 +27,8 @@ import { FaCameraRetro } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { signUpSchema } from "@/lib/validations";
 import { Skeleton } from "@/components/ui/skeleton";
+import AlertDialogLoader from "@/components/AlertDialogLoader";
+
 // @ts-expect-error dont have type file
 import Files from "react-files";
 
@@ -33,6 +36,7 @@ const SignUp = () => {
   const router = useRouter();
   const { toast } = useToast();
   const [uploading, setUploading] = useState<boolean>(false);
+  const [signningup, setSignningup] = useState<boolean>(false);
   const [formData, setFormData] = useState<SignupFormData>({
     email: "",
     username: "",
@@ -78,7 +82,7 @@ const SignUp = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const result = signUpSchema.safeParse(formData);
     if (!result.success) {
       const formattedErrors: Partial<Record<keyof SignupFormData, string>> = {};
@@ -97,12 +101,49 @@ const SignUp = () => {
       setErrors(formattedErrors);
     } else {
       setErrors({});
-      console.log("Form data is valid:", formData);
+      setSignningup(true);
+      try {
+        const res = await signUp(result.data);
+        if (res.data.success) {
+          toast({
+            title: "Success",
+            description: res.data.message,
+          });
+          router.push("/signin");
+        } else {
+          toast({
+            title: "Error",
+            description: res.data.message,
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error("signup failed", error);
+        toast({
+          title: "Error",
+          description: "something went wrong while signning up!!",
+          variant: "destructive",
+        });
+      } finally {
+        setSignningup(false);
+        setFormData({
+          email: "",
+          username: "",
+          password: "",
+          role: "USER",
+          avatar: "",
+        });
+      }
     }
   };
 
   return (
     <div className="w-full h-screen flex items-center justify-center">
+      <AlertDialogLoader
+        open={signningup}
+        onOpenChange={setSignningup}
+        title="Signning up to Quizlytic"
+      />
       <Card className="w-96">
         <CardHeader>
           <CardTitle>Sign up to Quizlytic</CardTitle>

@@ -6,7 +6,7 @@ import {
   AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
 import Image from "next/image";
-import savingLogo from "./saving.gif";
+import savingLogo from "../public/saving.gif";
 
 const AlertDialogLoader = ({
   open,
