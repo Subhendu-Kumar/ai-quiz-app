@@ -59,7 +59,7 @@ model QuizAttempt {
   userId      String     @db.ObjectId
   user        User       @relation("UserAttempts", fields: [userId], references: [id])
   responses   Response[]
-  score       Int?
+  score       Int        @default(0)
   completed   Boolean    @default(false)
   attemptedAt DateTime   @default(now())
   updatedAt   DateTime   @updatedAt

@@ -345,6 +345,7 @@ export const attemptQuiz = async (
     if (existingAttempt) {
       res.json({
         success: true,
+        existing: true,
         message: "quiz attempted previously!",
         attempt: existingAttempt,
       });
@@ -367,6 +368,7 @@ export const attemptQuiz = async (
       });
       res.json({
         success: true,
+        existing: false,
         message: "quiz attempt created",
         attempt: newAttempt,
       });
@@ -432,4 +434,60 @@ export const submitResponse = async (
     console.error("Error submitting responses:", error);
     res.status(500).json({ message: "Internal server error" });
   }
+};
+
+export const getAnalyticsByQuizId = async (
+  req: Request<{ quizId: string }>,
+  res: Response
+): Promise<void> => {
+  const { quizId } = req.params;
+  const { id: userId } = (req as any).user;
+  if (!quizId) {
+    res.json({ success: false, message: "quiz id not provided!!" });
+    return;
+  }
+  const existingAttempt = await prisma.quizAttempt.findFirst({
+    where: {
+      AND: [{ quizId }, { userId }],
+    },
+    include: {
+      responses: true,
+      quiz: {
+        include: {
+          questions: true,
+        },
+      },
+    },
+  });
+  if (!existingAttempt) {
+    res.json({
+      success: false,
+      message: "quiz attempt not found for the user",
+    });
+    return;
+  }
+  if (!existingAttempt.completed) {
+    res.json({ success: false, message: "quiz attempt is not completed" });
+    return;
+  }
+  const { quiz, responses } = existingAttempt;
+  const totalNoOfQuestions = quiz.questions.length;
+  const noOfQuestionsAttempted = responses.length;
+  const securedMark = existingAttempt.score;
+  const incorrectAns = noOfQuestionsAttempted - securedMark;
+  const noOfQuestionsSkipped = totalNoOfQuestions - noOfQuestionsAttempted;
+  const accuracy =
+    noOfQuestionsAttempted > 0
+      ? (securedMark / noOfQuestionsAttempted) * 100
+      : 0;
+  res.json({
+    success: true,
+    message: "Successfully fetched analytics",
+    totalNoOfQuestions,
+    noOfQuestionsAttempted,
+    securedMark,
+    incorrectAns,
+    noOfQuestionsSkipped,
+    accuracy: accuracy.toFixed(2) + "%",
+  });
 };
