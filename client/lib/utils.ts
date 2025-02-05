@@ -9,42 +9,52 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const setUserDetails = (data: User): void => {
-  localStorage.setItem(USER_DETAILS_KEY, JSON.stringify(data));
+  if (typeof window !== "undefined") {
+    localStorage.setItem(USER_DETAILS_KEY, JSON.stringify(data));
+  }
 };
 
 export const getUserDetails = (): User | null => {
-  const userDetails = localStorage.getItem(USER_DETAILS_KEY);
-  if (userDetails) {
-    return JSON.parse(userDetails);
+  if (typeof window !== "undefined") {
+    const userDetails = localStorage.getItem(USER_DETAILS_KEY);
+    if (userDetails) {
+      return JSON.parse(userDetails);
+    }
   }
   return null;
 };
 
 export const setToken = (token: string): void => {
-  localStorage.setItem(TOKEN_KEY, token);
+  if (typeof window !== "undefined") {
+    localStorage.setItem(TOKEN_KEY, token);
+  }
 };
 
 export const getToken = (): string | null => {
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (token) {
-    try {
-      const decodedToken = jwtDecode(token);
-      const currentTime = Date.now() / 1000;
-      if (decodedToken.exp && decodedToken.exp < currentTime) {
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+        if (decodedToken.exp && decodedToken.exp < currentTime) {
+          clearUserData();
+          return null;
+        }
+        return token;
+      } catch (error) {
+        console.log(error);
         clearUserData();
         return null;
       }
-      return token;
-    } catch (error) {
-      console.log(error);
-      clearUserData();
-      return null;
     }
   }
   return null;
 };
 
 export const clearUserData = (): void => {
-  localStorage.removeItem(TOKEN_KEY);
-  localStorage.removeItem(USER_DETAILS_KEY);
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_DETAILS_KEY);
+  }
 };
