@@ -34,3 +34,13 @@ export interface Quiz {
   updatedAt: string;
   creator: User;
 }
+
+export interface Attempt {
+  id: string;
+  userId: string;
+  quizId: string;
+  score: number;
+  completed: boolean;
+  attemptedAt: string;
+  updatedAt: string;
+}

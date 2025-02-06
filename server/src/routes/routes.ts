@@ -26,11 +26,12 @@ router.post("/quiz/attempt/:quizId", verifyToken, attemptQuiz);
 router.post("/quiz/submit/:attemptId", verifyToken, submitResponse);
 
 /*---------- all get routes ----------*/
-router.get("/quiz/:quizId", verifyToken, getQuizeById);
 router.get("/quiz/recent", verifyToken, getRecentQuizes);
-router.get("/quiz/analytics", verifyToken, getAnalytics);
 router.get("/quiz/recent/me", verifyToken, getRecentQuizesMe);
 router.get("/quiz/list/:page", verifyToken, getAllQuizesPaginated);
+router.get("/quiz/:quizId", verifyToken, getQuizeById);
+
+router.get("/quiz/analytics", verifyToken, getAnalytics);
 router.get("/quiz/analytics/:quizId", verifyToken, getAnalyticsByQuizId);
 
 export default router;

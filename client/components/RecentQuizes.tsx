@@ -7,8 +7,11 @@ import { getUserDetails } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import React, { useEffect, useState } from "react";
 import { quizFetchRecent, quizFetchRecentMe } from "@/api";
+import { useRouter } from "next/navigation";
+import { FaArrowRight } from "react-icons/fa";
 
 const RecentQuizes = () => {
+  const router = useRouter();
   const { toast } = useToast();
   const user = getUserDetails();
   const [quizes, setQuizes] = useState<Quiz[] | []>([]);
@@ -74,6 +77,10 @@ const RecentQuizes = () => {
     }
   }, [toast, user?.role]);
 
+  const handleClick = (quizid: string) => {
+    router.push(`/practice/${quizid}`);
+  };
+
   return (
     <div className="mt-8 w-full h-auto">
       <h1 className="text-xl font-semibold font-sans">
@@ -93,8 +100,12 @@ const RecentQuizes = () => {
             <Button
               key={quiz.id}
               variant="secondary"
-              className="w-full h-40 bg-orange-50 flex items-start justify-between flex-col rounded-lg p-4"
+              onClick={() => handleClick(quiz.id)}
+              className="w-full h-40 bg-orange-50 hover:bg-orange-200 flex items-start justify-between flex-col rounded-lg p-4 relative"
             >
+              <div className="absolute top-4 right-4 p-2 rounded-full flex items-center justify-center bg-orange-200">
+                <FaArrowRight />
+              </div>
               <div className="w-full h-auto flex flex-col items-start justify-start">
                 <p className="font-semibold text-lg">{quiz.title}</p>
                 <p className="text-sm text-gray-600">{quiz.description}</p>
@@ -131,8 +142,12 @@ const RecentQuizes = () => {
                 <Button
                   key={quiz.id}
                   variant="secondary"
-                  className="w-full h-40 bg-orange-50 flex items-start justify-between flex-col rounded-lg p-4"
+                  onClick={() => handleClick(quiz.id)}
+                  className="w-full relative h-40 bg-orange-50 flex items-start justify-between flex-col rounded-lg p-4"
                 >
+                  <div className="absolute top-4 right-4 p-2 rounded-full flex items-center justify-center bg-orange-200">
+                    <FaArrowRight />
+                  </div>
                   <div className="w-full h-auto flex flex-col items-start justify-start">
                     <p className="font-semibold text-lg">{quiz.title}</p>
                     <p className="text-sm text-gray-600">{quiz.description}</p>

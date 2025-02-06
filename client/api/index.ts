@@ -70,3 +70,12 @@ export const getPaginatedQuiz = async (page: number) => {
     throw new Error(error instanceof Error ? error.message : String(error));
   }
 };
+
+export const attemptQuiz = async (quizId: string) => {
+  try {
+    const res = await API.post(`/quiz/attempt/${quizId}`);
+    return res;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+};
