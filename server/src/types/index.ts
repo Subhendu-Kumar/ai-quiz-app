@@ -1,3 +1,5 @@
+type Role = "USER" | "CREATOR";
+
 export interface User {
   id: string;
   username: string;
@@ -5,8 +7,6 @@ export interface User {
   avatar: string;
   role: Role;
 }
-
-type Role = "USER" | "CREATOR";
 
 export interface ApiResponse {
   success: boolean;

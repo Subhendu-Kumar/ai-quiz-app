@@ -12,10 +12,30 @@ const Navbar = () => {
   const { isAuthenticated, logout } = useAuth();
 
   return (
-    <div className="w-full h-16 top-0 left-0 bg-white/70 backdrop-blur-sm fixed z-50 shadow-md px-10 flex items-center justify-between">
+    <div className="w-full h-16 top-0 left-0 bg-white/70 backdrop-blur-md fixed z-50 shadow-md px-10 flex items-center justify-between">
       <div className="flex items-center justify-center gap-2 px-2 py-1 bg-zinc-50 border border-gray-100 rounded-lg">
-        <img src="./logo.svg" alt="app logo" className="w-10 h-10" />
+        <img src="/logo.svg" alt="app logo" className="w-10 h-10" />
         <p className="text-3xl font-semibold font-sans">Quizlytic</p>
+      </div>
+      <div className="flex items-center justify-center gap-4">
+        <button
+          onClick={() => router.push("/dashboard/allquizes")}
+          className="text-lg font-medium text-black hover:bg-green-50 py-1 px-2 rounded-md"
+        >
+          All quizes
+        </button>
+        <button
+          onClick={() => router.push("/dashboard/myanalytics")}
+          className="text-lg font-medium text-black hover:bg-green-50 py-1 px-2 rounded-md"
+        >
+          My analytics
+        </button>
+        <button className="text-lg font-medium text-black hover:bg-green-50 py-1 px-2 rounded-md">
+          About
+        </button>
+        <button className="text-lg font-medium text-black hover:bg-green-50 py-1 px-2 rounded-md">
+          Contact
+        </button>
       </div>
       <div className="flex items-center justify-center gap-4">
         <div className="w-10 h-10 rounded-full overflow-hidden">

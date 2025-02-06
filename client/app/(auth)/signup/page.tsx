@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import axios from "axios";
 import { signUp } from "@/api";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SignupFormData } from "@/types";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
@@ -31,12 +31,10 @@ import AlertDialogLoader from "@/components/AlertDialogLoader";
 
 // @ts-expect-error dont have type file
 import Files from "react-files";
-import { useAuth } from "@/context/provider";
 
 const SignUp = () => {
   const router = useRouter();
   const { toast } = useToast();
-  const { isAuthenticated } = useAuth();
   const [uploading, setUploading] = useState<boolean>(false);
   const [signningup, setSignningup] = useState<boolean>(false);
   const [formData, setFormData] = useState<SignupFormData>({
@@ -49,12 +47,6 @@ const SignUp = () => {
   const [errors, setErrors] = useState<
     Partial<Record<keyof SignupFormData, string>>
   >({});
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, router]);
 
   const handleImageChange = async (files: File[]) => {
     const upload_url = `${process.env.NEXT_PUBLIC_IMAGE_UPLOAD_URL}`;

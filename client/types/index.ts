@@ -1,4 +1,4 @@
-import { signInSchema, signUpSchema } from "@/lib/validations";
+import { quizSchema, signInSchema, signUpSchema } from "@/lib/validations";
 import { z } from "zod";
 
 export interface AuthContextProps {
@@ -12,6 +12,8 @@ export type SignupFormData = z.infer<typeof signUpSchema>;
 
 export type SignInFormData = z.infer<typeof signInSchema>;
 
+export type QuizSchema = z.infer<typeof quizSchema>;
+
 type Role = "USER" | "CREATOR";
 
 export interface User {
@@ -20,4 +22,15 @@ export interface User {
   email: string;
   avatar: string;
   username: string;
+}
+
+export interface Quiz {
+  id: string;
+  title: string;
+  description: string;
+  quiz_type: string;
+  creatorId: string;
+  createdAt: string;
+  updatedAt: string;
+  creator: User;
 }

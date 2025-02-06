@@ -2,28 +2,35 @@ import {
   signIn,
   signUp,
   attemptQuiz,
+  getAnalytics,
   getQuizeById,
   submitResponse,
   getRecentQuizes,
   createQuizWithAi,
-  getAllQuizesPaginated,
+  getRecentQuizesMe,
   getAnalyticsByQuizId,
+  getAllQuizesPaginated,
 } from "../controllers/controllers";
 import { Router } from "express";
 import verifyToken from "../services/verify_token";
 
 const router: Router = Router();
 
-// Define all routes here
+/*---------- auth routes ----------*/
 router.post("/auth/signup", signUp);
 router.post("/auth/signin", signIn);
 
+/*---------- all post routes ----------*/
 router.post("/create/quiz/ai", verifyToken, createQuizWithAi);
-router.get("/quiz/list/:page", verifyToken, getAllQuizesPaginated);
-router.get("/quiz/recent", verifyToken, getRecentQuizes);
-router.get("/quiz/:quizId", verifyToken, getQuizeById);
 router.post("/quiz/attempt/:quizId", verifyToken, attemptQuiz);
 router.post("/quiz/submit/:attemptId", verifyToken, submitResponse);
-router.get("/quiz/analytics/:quizId", verifyToken, getAnalyticsByQuizId)
+
+/*---------- all get routes ----------*/
+router.get("/quiz/:quizId", verifyToken, getQuizeById);
+router.get("/quiz/recent", verifyToken, getRecentQuizes);
+router.get("/quiz/analytics", verifyToken, getAnalytics);
+router.get("/quiz/recent/me", verifyToken, getRecentQuizesMe);
+router.get("/quiz/list/:page", verifyToken, getAllQuizesPaginated);
+router.get("/quiz/analytics/:quizId", verifyToken, getAnalyticsByQuizId);
 
 export default router;

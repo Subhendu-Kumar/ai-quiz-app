@@ -1,7 +1,20 @@
-import { SignInFormData, SignupFormData } from "@/types";
+import { getToken } from "@/lib/utils";
+import { QuizSchema, SignInFormData, SignupFormData } from "@/types";
 import axios from "axios";
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_BACKEND_URL}`;
+
+const API = axios.create({
+  baseURL: BASE_URL,
+});
+
+API.interceptors.request.use((req) => {
+  const token = getToken();
+  if (token) {
+    req.headers.Authorization = `Bearer ${token}`;
+  }
+  return req;
+});
 
 /*---------- auth services ----------*/
 export const signUp = async (data: SignupFormData) => {
@@ -16,6 +29,42 @@ export const signUp = async (data: SignupFormData) => {
 export const signIn = async (data: SignInFormData) => {
   try {
     const res = await axios.post(`${BASE_URL}/auth/signin`, data);
+    return res;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+};
+
+export const quizFetchRecent = async () => {
+  try {
+    const res = await API.get("/quiz/recent");
+    return res;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+};
+
+export const quizFetchRecentMe = async () => {
+  try {
+    const res = await API.get("/quiz/recent/me");
+    return res;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+};
+
+export const generateQuiz = async (data: QuizSchema) => {
+  try {
+    const res = await API.post("/create/quiz/ai", data);
+    return res;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+};
+
+export const getPaginatedQuiz = async (page: number) => {
+  try {
+    const res = await API.get(`/quiz/list/${page.toString()}`);
     return res;
   } catch (error) {
     throw new Error(error instanceof Error ? error.message : String(error));

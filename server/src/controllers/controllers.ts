@@ -214,7 +214,7 @@ export const getAllQuizesPaginated = async (
   res: Response
 ): Promise<void> => {
   const { page = "1" } = req.params;
-  const LIMIT = 11;
+  const LIMIT = 9;
   const currentPage = Number(page);
   if (isNaN(currentPage) || currentPage < 1) {
     res.json({ success: false, message: "Invalid page number" });
@@ -226,6 +226,17 @@ export const getAllQuizesPaginated = async (
     const quizes = await prisma.quiz.findMany({
       orderBy: {
         createdAt: "desc",
+      },
+      include: {
+        creator: {
+          select: {
+            email: true,
+            username: true,
+            avatar: true,
+            role: true,
+            id: true,
+          },
+        },
       },
       skip: startIndex,
       take: LIMIT,
@@ -254,27 +265,69 @@ export const getRecentQuizes = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const user = (req as any).user;
-  let quizes;
   try {
-    if (user.role === "CREATOR") {
-      quizes = await prisma.quiz.findMany({
-        where: {
-          creatorId: user.id,
+    const quizes = await prisma.quiz.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 8,
+      include: {
+        creator: {
+          select: {
+            email: true,
+            username: true,
+            avatar: true,
+            role: true,
+            id: true,
+          },
         },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: 5,
-      });
-    } else {
-      quizes = await prisma.quiz.findMany({
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: 5,
-      });
+      },
+    });
+    if (!quizes || quizes.length === 0) {
+      res.json({ success: false, message: "No quizes found!!!" });
+      return;
     }
+    res.json({ success: true, message: "quiz retrived successfully!", quizes });
+  } catch (error) {
+    console.error(error);
+    res.json({
+      success: false,
+      message: "Internal server error",
+      error,
+    });
+  }
+};
+
+export const getRecentQuizesMe = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const user = (req as any).user;
+  if (user.role !== "CREATOR") {
+    res.json({ success: false, message: "you are not an creator" });
+    return;
+  }
+  try {
+    const quizes = await prisma.quiz.findMany({
+      where: {
+        creatorId: user.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 8,
+      include: {
+        creator: {
+          select: {
+            email: true,
+            username: true,
+            avatar: true,
+            role: true,
+            id: true,
+          },
+        },
+      },
+    });
     if (!quizes || quizes.length === 0) {
       res.json({ success: false, message: "No quizes found!!!" });
       return;
@@ -491,3 +544,8 @@ export const getAnalyticsByQuizId = async (
     accuracy: accuracy.toFixed(2) + "%",
   });
 };
+
+export const getAnalytics = async (
+  req: Request,
+  res: Response
+): Promise<void> => {}

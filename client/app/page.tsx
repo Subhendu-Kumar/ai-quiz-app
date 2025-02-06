@@ -1,21 +1,12 @@
 "use client";
 
-import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { HiOutlineArrowNarrowRight } from "react-icons/hi";
-import { useAuth } from "@/context/provider";
 import { useRouter } from "next/navigation";
+import React from "react";
+import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 
-const Home = () => {
+const MainPage = () => {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, router]);
-
   return (
     <div className="w-full h-screen flex flex-col gap-3 items-center justify-center select-none">
       <div className="flex items-center justify-center gap-2 px-2 py-1 bg-zinc-50 border border-gray-100 rounded-lg">
@@ -29,7 +20,7 @@ const Home = () => {
       </p>
       <Button
         className="w-[35%] flex items-center justify-center gap-2"
-        onClick={() => router.push("/signin")}
+        onClick={() => router.push("/dashboard")}
       >
         Explore <HiOutlineArrowNarrowRight />
       </Button>
@@ -43,4 +34,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default MainPage;
