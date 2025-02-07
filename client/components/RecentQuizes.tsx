@@ -113,7 +113,7 @@ const RecentQuizes = () => {
               </div>
               <div className="w-full h-auto flex items-center justify-between">
                 <p className="text-sm text-gray-700">
-                  Created by: {quiz.creator.username}
+                  Created by: {quiz.creator?.username}
                 </p>
                 <p className="text-sm text-gray-500">
                   {new Date(quiz.createdAt).toLocaleDateString()}
@@ -157,7 +157,7 @@ const RecentQuizes = () => {
                   </div>
                   <div className="w-full h-auto flex items-center justify-between">
                     <p className="text-sm text-gray-700">
-                      Created by: {quiz.creator.username}
+                      Created by: {quiz.creator?.username}
                     </p>
                     <p className="text-sm text-gray-500">
                       {new Date(quiz.createdAt).toLocaleDateString()}

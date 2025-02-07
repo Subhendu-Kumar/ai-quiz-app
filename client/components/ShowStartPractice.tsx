@@ -1,11 +1,11 @@
 "use client";
 
 import { Attempt } from "@/types";
-import React, { use, useEffect, useState } from "react";
-import { Button } from "./ui/button";
-import { FaArrowRotateRight } from "react-icons/fa6";
 import { attemptQuiz } from "@/api";
+import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { FaArrowRotateRight } from "react-icons/fa6";
+import React, { use, useEffect, useState } from "react";
 
 const ShowStartPractice = ({
   params,
@@ -37,6 +37,10 @@ const ShowStartPractice = ({
     fetAttemptQuiz();
   }, []);
 
+  const handleClick = () => {
+    router.replace(`/practice/${quizid}/attempt/${attempt?.id}`);
+  };
+
   if (loading) {
     return (
       <div className="w-full h-screen flex flex-col items-center justify-center">
@@ -49,10 +53,6 @@ const ShowStartPractice = ({
     );
   }
 
-  const handleClick = () => {
-    router.replace(`/practice/${quizid}/attempt/${attempt?.id}`);
-  };
-
   return (
     <div className="w-full h-auto p-10 pt-2">
       <div className="flex items-center justify-center gap-2 px-2 py-1 bg-zinc-50 border border-gray-100 rounded-lg">
@@ -60,7 +60,7 @@ const ShowStartPractice = ({
         <p className="text-3xl font-semibold font-sans">Quizlytic</p>
       </div>
       <h1 className="capitalize text-xl font-sans font-semibold mt-6">
-        quiz title : quiz topic
+        {attempt?.quiz?.title} : {attempt?.quiz?.quiz_type}
       </h1>
       <div className="w-full px-10 h-auto mt-4">
         <h1 className="text-lg font-bold text-blue-600 mb-4">

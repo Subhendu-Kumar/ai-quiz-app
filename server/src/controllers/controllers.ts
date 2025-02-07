@@ -391,8 +391,14 @@ export const attemptQuiz = async (
       where: {
         AND: [{ quizId }, { userId }],
       },
-      include: {
-        responses: true,
+      select: {
+        id: true,
+        userId: true,
+        quiz: true,
+        score: true,
+        completed: true,
+        attemptedAt: true,
+        updatedAt: true,
       },
     });
     if (existingAttempt) {
@@ -412,7 +418,7 @@ export const attemptQuiz = async (
         select: {
           id: true,
           userId: true,
-          quizId: true,
+          quiz: true,
           score: true,
           completed: true,
           attemptedAt: true,
@@ -548,4 +554,4 @@ export const getAnalyticsByQuizId = async (
 export const getAnalytics = async (
   req: Request,
   res: Response
-): Promise<void> => {}
+): Promise<void> => {};

@@ -32,13 +32,13 @@ export interface Quiz {
   creatorId: string;
   createdAt: string;
   updatedAt: string;
-  creator: User;
+  creator?: User;
 }
 
 export interface Attempt {
   id: string;
   userId: string;
-  quizId: string;
+  quiz: Quiz;
   score: number;
   completed: boolean;
   attemptedAt: string;
