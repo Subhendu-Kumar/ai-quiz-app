@@ -44,3 +44,41 @@ export interface Attempt {
   attemptedAt: string;
   updatedAt: string;
 }
+
+export interface QuizAttempt {
+  id: string;
+  quizId: string;
+  userId: string;
+  score: number;
+  completed: boolean;
+  attemptedAt: string;
+  updatedAt: string;
+  quiz: Quiz2;
+}
+
+interface Quiz2 {
+  id: string;
+  title: string;
+  description: string;
+  quiz_type: "TRUE_FALSE" | "MULTIPLE_CHOICE";
+  creatorId: string;
+  createdAt: string;
+  updatedAt: string;
+  questions: Question[];
+}
+
+interface Question {
+  id: string;
+  quizId: string;
+  text: string;
+  type: "TRUE_FALSE" | "MULTIPLE_CHOICE";
+  options: string[];
+  answer: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Ans {
+  questionId: string;
+  selectedOption: number;
+}

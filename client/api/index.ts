@@ -1,5 +1,5 @@
 import { getToken } from "@/lib/utils";
-import { QuizSchema, SignInFormData, SignupFormData } from "@/types";
+import { Ans, QuizSchema, SignInFormData, SignupFormData } from "@/types";
 import axios from "axios";
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_BACKEND_URL}`;
@@ -74,6 +74,25 @@ export const getPaginatedQuiz = async (page: number) => {
 export const attemptQuiz = async (quizId: string) => {
   try {
     const res = await API.post(`/quiz/attempt/${quizId}`);
+    return res;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+};
+
+export const getQuizByAttemptId = async (attemptId: string) => {
+  try {
+    const res = await API.get(`/get/quiz/${attemptId}`);
+    return res;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+};
+
+export const submitQuizTest = async (attemptId: string, answers: Ans[]) => {
+  console.log(answers)
+  try {
+    const res = await API.post(`/quiz/submit/${attemptId}`, {answers});
     return res;
   } catch (error) {
     throw new Error(error instanceof Error ? error.message : String(error));

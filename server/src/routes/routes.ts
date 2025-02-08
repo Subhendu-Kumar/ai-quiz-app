@@ -10,6 +10,7 @@ import {
   getRecentQuizesMe,
   getAnalyticsByQuizId,
   getAllQuizesPaginated,
+  getQuizByAttemptId,
 } from "../controllers/controllers";
 import { Router } from "express";
 import verifyToken from "../services/verify_token";
@@ -30,6 +31,7 @@ router.get("/quiz/recent", verifyToken, getRecentQuizes);
 router.get("/quiz/recent/me", verifyToken, getRecentQuizesMe);
 router.get("/quiz/list/:page", verifyToken, getAllQuizesPaginated);
 router.get("/quiz/:quizId", verifyToken, getQuizeById);
+router.get("/get/quiz/:attemptId", verifyToken, getQuizByAttemptId)
 
 router.get("/quiz/analytics", verifyToken, getAnalytics);
 router.get("/quiz/analytics/:quizId", verifyToken, getAnalyticsByQuizId);

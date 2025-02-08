@@ -376,6 +376,51 @@ export const getQuizeById = async (
   }
 };
 
+export const getQuizByAttemptId = async (
+  req: Request<{ attemptId: string }>,
+  res: Response
+): Promise<void> => {
+  const { attemptId } = req.params;
+  const { id: userId } = (req as any).user;
+  if (!attemptId) {
+    res.json({ success: false, message: "attempt id not provided!!" });
+    return;
+  }
+  try {
+    const existingAttempt = await prisma.quizAttempt.findFirst({
+      where: {
+        AND: [{ id: attemptId }, { userId }],
+      },
+      include: {
+        quiz: {
+          include: {
+            questions: true,
+          },
+        },
+      },
+    });
+    if (!existingAttempt) {
+      res.json({
+        success: false,
+        message: "quiz attempt not found!",
+      });
+      return;
+    }
+    res.json({
+      success: true,
+      message: "attempt fetched successfully!",
+      attempt: existingAttempt,
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({
+      success: false,
+      message: "Internal server error",
+      error,
+    });
+  }
+};
+
 export const attemptQuiz = async (
   req: Request<{ quizId: string }>,
   res: Response
@@ -450,7 +495,7 @@ export const submitResponse = async (
     const { attemptId } = req.params;
     const { answers } = req.body;
     if (!answers || !Array.isArray(answers) || answers.length === 0) {
-      res.status(400).json({ message: "Invalid or empty answers array" });
+      res.json({ success: false, message: "Invalid or empty answers array" });
       return;
     }
     const attempt = await prisma.quizAttempt.findUnique({
@@ -458,7 +503,7 @@ export const submitResponse = async (
       include: { quiz: { include: { questions: true } } },
     });
     if (!attempt) {
-      res.status(404).json({ message: "Quiz attempt not found" });
+      res.json({success: false, message: "Quiz attempt not found" });
       return;
     }
     if (attempt.completed) {
