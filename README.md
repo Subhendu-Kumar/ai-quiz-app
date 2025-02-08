@@ -1,4 +1,3 @@
-
 # Quizlytics
 
 Quizlytics is a full-stack quiz application that enables users to create AI-generated quizzes, attempt quizzes, track their analytics, and manage their accounts. The application consists of two separate components:
@@ -25,25 +24,27 @@ A Node.js and Express-based API that handles data storage and processing by usin
 - Quiz Management – APIs for creating, updating, and deleting quizzes.
 - User Authentication – Secure login and signup with JWT-based authentication.
 - Quiz Attempt Tracking – Store and process quiz results.
-- Performance Analytics – Generate and serve analytics for users' quiz performance.
-
+- Performance Analytics – Generate and serve analytics for user's quiz performance.
 
 ## 🏗 Tech Stack
 
 #### Frontend:
 
-- React.js – For building the user interface.
+- Next.js – For building the user interface.
 - TypeScript – Ensures type safety and scalability.
 - Tailwind CSS – For styling.
+- Shadcn ui - for ui components.
 - Axios – For API data fetching and state management.
 
 #### Backend:
 
 - Node.js & Express.js – For building REST APIs.
+- TypeScript – Ensures type safety and scalability.
 - MongoDB – For data storage.
 - Prisma – ORM/ODM for database interactions.
 - JWT & bcrypt.js – For authentication and security.
 - KIDJIG API – For AI-powered quiz generation.
+
 ## 🔧 Setup & Installation
 
 #### 🚀 Backend Setup
@@ -78,6 +79,7 @@ A Node.js and Express-based API that handles data storage and processing by usin
 
 ##### Start the frontend server:
     npm run dev
+
 ## 📖 API Endpoints Overview
 
 #### Authentication
@@ -144,6 +146,7 @@ A Node.js and Express-based API that handles data storage and processing by usin
 `GET /api/quiz/analytics` – get total analytics of user.
 
 `GET /api/quiz/analytics/:attemptId` – get analytics of particular attempt.
+
 ## 📌 Usage Workflow
 
 - Sign Up / Log In – Users can create an account and sign in.
