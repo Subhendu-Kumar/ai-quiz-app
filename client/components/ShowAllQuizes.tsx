@@ -4,10 +4,10 @@ import { Quiz } from "@/types";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { getPaginatedQuiz } from "@/api";
-import { useToast } from "@/hooks/use-toast";
-import React, { useEffect, useState } from "react";
-import { FaArrowRight } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
+import { FaArrowRight } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 
 const ShowAllQuizes = () => {
   const router = useRouter();

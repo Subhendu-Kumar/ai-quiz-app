@@ -1,12 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import React from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 
 const MainPage = () => {
   const router = useRouter();
+
   return (
     <div className="w-full h-screen flex flex-col gap-3 items-center justify-center select-none">
       <div className="flex items-center justify-center gap-2 px-2 py-1 bg-zinc-50 border border-gray-100 rounded-lg">

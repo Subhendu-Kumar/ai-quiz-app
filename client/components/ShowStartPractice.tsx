@@ -25,7 +25,7 @@ const ShowStartPractice = ({
         if (res.data.success) {
           setAttempt(res.data.attempt);
           if (res.data.existing && res.data.attempt.completed) {
-            console.log("completed"); // pending route to analytics
+            router.replace(`/analytics/${res.data.attempt.id}`);
           }
         }
       } catch (error) {

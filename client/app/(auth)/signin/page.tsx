@@ -1,24 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
 import {
   Card,
-  CardContent,
-  CardDescription,
+  CardTitle,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardContent,
+  CardDescription,
 } from "@/components/ui/card";
+import { signIn } from "@/api";
+import React, { useState } from "react";
+import { SignInFormData } from "@/types";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/context/provider";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signInSchema } from "@/lib/validations";
-import { SignInFormData } from "@/types";
-import { useRouter } from "next/navigation";
-import { signIn } from "@/api";
-import { useToast } from "@/hooks/use-toast";
 import AlertDialogLoader from "@/components/AlertDialogLoader";
-import { useAuth } from "@/context/provider";
 
 const SignIn = () => {
   const router = useRouter();

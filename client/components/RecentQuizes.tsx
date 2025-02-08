@@ -3,12 +3,12 @@
 import { Quiz } from "@/types";
 import { Button } from "./ui/button";
 import { Skeleton } from "./ui/skeleton";
-import { getUserDetails } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { getUserDetails } from "@/lib/utils";
+import { FaArrowRight } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
 import { quizFetchRecent, quizFetchRecentMe } from "@/api";
-import { useRouter } from "next/navigation";
-import { FaArrowRight } from "react-icons/fa";
 
 const RecentQuizes = () => {
   const router = useRouter();

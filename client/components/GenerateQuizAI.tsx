@@ -19,13 +19,13 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { QuizSchema } from "@/types";
+import { generateQuiz } from "@/api";
 import React, { useState } from "react";
 import { Textarea } from "./ui/textarea";
-import { quizSchema } from "@/lib/validations";
-import { useToast } from "@/hooks/use-toast";
-import { generateQuiz } from "@/api";
-import AlertDialogLoader from "./AlertDialogLoader";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
+import { quizSchema } from "@/lib/validations";
+import AlertDialogLoader from "./AlertDialogLoader";
 
 const GenerateQuizAI = () => {
   const router = useRouter();

@@ -1,14 +1,14 @@
 "use client";
 
 import { AuthContextProps, User } from "@/types";
-import { clearUserData, getToken, setToken, setUserDetails } from "@/lib/utils";
 import { createContext, useContext, useEffect, useState } from "react";
+import { clearUserData, getToken, setToken, setUserDetails } from "@/lib/utils";
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const token = getToken();

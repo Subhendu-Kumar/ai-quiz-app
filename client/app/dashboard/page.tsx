@@ -1,11 +1,11 @@
 "use client";
 
-import RecentQuizes from "@/components/RecentQuizes";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { getUserDetails } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { Button } from "@/components/ui/button";
+import RecentQuizes from "@/components/RecentQuizes";
 
 const DashboardHome = () => {
   const router = useRouter();

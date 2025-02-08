@@ -503,7 +503,7 @@ export const submitResponse = async (
       include: { quiz: { include: { questions: true } } },
     });
     if (!attempt) {
-      res.json({success: false, message: "Quiz attempt not found" });
+      res.json({ success: false, message: "Quiz attempt not found" });
       return;
     }
     if (attempt.completed) {
@@ -540,19 +540,19 @@ export const submitResponse = async (
   }
 };
 
-export const getAnalyticsByQuizId = async (
-  req: Request<{ quizId: string }>,
+export const getAnalyticsByAttemptId = async (
+  req: Request<{ attemptId: string }>,
   res: Response
 ): Promise<void> => {
-  const { quizId } = req.params;
+  const { attemptId } = req.params;
   const { id: userId } = (req as any).user;
-  if (!quizId) {
+  if (!attemptId) {
     res.json({ success: false, message: "quiz id not provided!!" });
     return;
   }
   const existingAttempt = await prisma.quizAttempt.findFirst({
     where: {
-      AND: [{ quizId }, { userId }],
+      AND: [{ id: attemptId }, { userId }],
     },
     include: {
       responses: true,
@@ -574,9 +574,19 @@ export const getAnalyticsByQuizId = async (
     res.json({ success: false, message: "quiz attempt is not completed" });
     return;
   }
+  const attempt = await prisma.quizAttempt.findFirst({
+    where: {
+      AND: [{ id: attemptId }, { userId }],
+    },
+    include: {
+      quiz: true,
+    },
+  });
   const { quiz, responses } = existingAttempt;
   const totalNoOfQuestions = quiz.questions.length;
   const noOfQuestionsAttempted = responses.length;
+  const percentageComplete =
+    (noOfQuestionsAttempted / totalNoOfQuestions) * 100;
   const securedMark = existingAttempt.score;
   const incorrectAns = noOfQuestionsAttempted - securedMark;
   const noOfQuestionsSkipped = totalNoOfQuestions - noOfQuestionsAttempted;
@@ -592,7 +602,9 @@ export const getAnalyticsByQuizId = async (
     securedMark,
     incorrectAns,
     noOfQuestionsSkipped,
-    accuracy: accuracy.toFixed(2) + "%",
+    accuracy: accuracy.toFixed(2),
+    percentageComplete: percentageComplete.toFixed(2),
+    attempt,
   });
 };
 

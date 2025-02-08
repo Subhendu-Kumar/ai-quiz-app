@@ -1,6 +1,6 @@
+import axios from "axios";
 import { getToken } from "@/lib/utils";
 import { Ans, QuizSchema, SignInFormData, SignupFormData } from "@/types";
-import axios from "axios";
 
 const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_BACKEND_URL}`;
 
@@ -16,7 +16,6 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
-/*---------- auth services ----------*/
 export const signUp = async (data: SignupFormData) => {
   try {
     const res = await axios.post(`${BASE_URL}/auth/signup`, data);
@@ -90,9 +89,18 @@ export const getQuizByAttemptId = async (attemptId: string) => {
 };
 
 export const submitQuizTest = async (attemptId: string, answers: Ans[]) => {
-  console.log(answers)
+  console.log(answers);
   try {
-    const res = await API.post(`/quiz/submit/${attemptId}`, {answers});
+    const res = await API.post(`/quiz/submit/${attemptId}`, { answers });
+    return res;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+};
+
+export const getQuizAnalytics = async (attemptId: string) => {
+  try {
+    const res = await API.get(`/quiz/analytics/${attemptId}`);
     return res;
   } catch (error) {
     throw new Error(error instanceof Error ? error.message : String(error));

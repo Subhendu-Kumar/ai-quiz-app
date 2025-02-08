@@ -8,9 +8,9 @@ import {
   getRecentQuizes,
   createQuizWithAi,
   getRecentQuizesMe,
-  getAnalyticsByQuizId,
   getAllQuizesPaginated,
   getQuizByAttemptId,
+  getAnalyticsByAttemptId,
 } from "../controllers/controllers";
 import { Router } from "express";
 import verifyToken from "../services/verify_token";
@@ -34,6 +34,6 @@ router.get("/quiz/:quizId", verifyToken, getQuizeById);
 router.get("/get/quiz/:attemptId", verifyToken, getQuizByAttemptId)
 
 router.get("/quiz/analytics", verifyToken, getAnalytics);
-router.get("/quiz/analytics/:quizId", verifyToken, getAnalyticsByQuizId);
+router.get("/quiz/analytics/:attemptId", verifyToken, getAnalyticsByAttemptId);
 
 export default router;

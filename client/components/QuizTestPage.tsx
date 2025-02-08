@@ -3,12 +3,12 @@
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { Ans, QuizAttempt } from "@/types";
-import { getQuizByAttemptId, submitQuizTest } from "@/api";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import AlertDialogLoader from "./AlertDialogLoader";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import React, { use, useEffect, useState } from "react";
-import AlertDialogLoader from "./AlertDialogLoader";
+import { getQuizByAttemptId, submitQuizTest } from "@/api";
 
 const QuizTestPage = ({
   params,
@@ -121,14 +121,15 @@ const QuizTestPage = ({
           title: "Success",
           description: res.data.message,
         });
+        router.replace(`/analytics/${attemptid}`);
       } else {
         toast({
           title: "Error",
           description: res.data.message,
           variant: "destructive",
         });
+        router.push("/dashboard");
       }
-      router.push("/dashboard");
     } catch (error) {
       console.log("error submitting answers", error);
       toast({
