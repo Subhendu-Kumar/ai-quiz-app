@@ -15,6 +15,8 @@ import ProfileDialog from "./ProfileDialog";
 import { useAuth } from "@/context/provider";
 import { getUserDetails } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
+import AboutDialog from "./AboutDialog";
+import ContactDialog from "./ContactDialog";
 
 const Navbar = () => {
   const router = useRouter();
@@ -22,9 +24,13 @@ const Navbar = () => {
   const pathname = usePathname();
   const { isAuthenticated, logout } = useAuth();
   const [showProfile, setShowProfile] = useState<boolean>(false);
+  const [showAboutDialog, setShowAboutDialog] = useState<boolean>(false);
+  const [showContactDialog, setShowContactDialog] = useState<boolean>(false);
 
   return (
     <div className="w-full h-16 top-0 left-0 bg-white/70 backdrop-blur-md fixed z-50 shadow-md px-10 flex items-center justify-between">
+      <AboutDialog open={showAboutDialog} onOpenChange={setShowAboutDialog} />
+      <ContactDialog open={showContactDialog} onOpenChange={setShowContactDialog} />
       <ProfileDialog
         open={showProfile}
         onOpenChange={setShowProfile}
@@ -58,10 +64,10 @@ const Navbar = () => {
         >
           My analytics
         </button>
-        <button className="text-lg font-medium text-black hover:bg-green-50 py-1 px-2 rounded-md">
+        <button onClick={() => setShowAboutDialog(true)} className="text-lg font-medium text-black hover:bg-green-50 py-1 px-2 rounded-md">
           About
         </button>
-        <button className="text-lg font-medium text-black hover:bg-green-50 py-1 px-2 rounded-md">
+        <button onClick={() => setShowContactDialog(true)} className="text-lg font-medium text-black hover:bg-green-50 py-1 px-2 rounded-md">
           Contact
         </button>
       </div>

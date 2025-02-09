@@ -199,7 +199,7 @@ const ShowMyAnalytics = () => {
               Average Secured Mark Per Attempt:
             </p>
             <p className="font-semibold text-xl text-green-600">
-              {data?.averageScorePerQuizAttempt}
+              {data?.averageScorePerQuizAttempt.toFixed(2)}
             </p>
           </div>
         </div>
