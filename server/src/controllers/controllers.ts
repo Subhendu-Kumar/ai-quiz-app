@@ -1,10 +1,10 @@
 import axios from "axios";
 import bcrypt from "bcryptjs";
 import { Response, Request } from "express";
-import { createToken } from "../services/create_token.ts";
+import { createToken } from "../services/create_token";
 import { PrismaClient, QuestionType } from "@prisma/client";
-import { ApiResponse, QuizQuestion } from "../types/index.ts";
-import { parseEscapedJsonString } from "../services/parse_json_string.ts";
+import { ApiResponse, QuizQuestion } from "../types/index";
+import { parseEscapedJsonString } from "../services/parse_json_string";
 
 const prisma = new PrismaClient();
 
