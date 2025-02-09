@@ -8,14 +8,6 @@ A Nextjs-based web application that provides an intuitive UI for users.
 #### Backend:
 A Node.js and Express-based API that handles data storage and processing by using TypeScript and Prisma for mongodb.
 
-### Deployments
-- **Client:** [Live Demo](https://ai-quiz-app-phi.vercel.app)
-- **Server:** [API Server](https://ai-quiz-app-be.vercel.app)
-
-### External API used
-- **Image Upload Api:** [Api Documentaion](https://github.com/Subhendu-Kumar/media-cloud-bridge/blob/main/README.md)
-- **Ai Api:** [Api Documentation](https://kidjig.gitbook.io/kidjig-docs)
-
 ## Features
 
 #### 🌟 Frontend Features
@@ -42,7 +34,7 @@ A Node.js and Express-based API that handles data storage and processing by usin
 - TypeScript – Ensures type safety and scalability.
 - Tailwind CSS – For styling.
 - Shadcn ui - for ui components.
-- Axios – For API data fetching and state management.
+- Axios – For API data fetching.
 
 #### Backend:
 
@@ -65,9 +57,9 @@ A Node.js and Express-based API that handles data storage and processing by usin
     npm install
 
 ##### Set up environment variables: Create a `.env` file and add:
-    API_KEY="api key"
-    DATABASE_URL="your database url"
-    API_URL="kidjig api url for quiz creation"
+    API_KEY="**************"
+    DATABASE_URL="*************"
+    API_URL="***********************"
 
 ##### Start the backend server:
     npm run dev
@@ -95,10 +87,10 @@ A Node.js and Express-based API that handles data storage and processing by usin
 `POST /api/auth/signup`
 ```json
 {
-  "email": "demo@example.com",
-  "username": "subhendu",
-  "password": "123456",
-  "avatar": "https://images.com/image/uifhwdjcweg",
+  "email": "example@example.com",
+  "username": "example-name",
+  "password": "******",
+  "avatar": "https://example.com/image/uifhwdjcweg",
   "role": "CREATOR"
 }
 ```
@@ -106,8 +98,8 @@ A Node.js and Express-based API that handles data storage and processing by usin
 `POST /api/auth/signin`
 ```json
 {
-  "email": "demo@example.com",
-  "password": "123456"
+  "email": "example@example.com",
+  "password": "******"
 }
 ```
 
@@ -116,10 +108,10 @@ A Node.js and Express-based API that handles data storage and processing by usin
 `POST /api/create/quiz/ai`
 ```json
 {
-    "title": "demo example",
-    "topic": "demo example",
+    "title": "example-title",
+    "topic": "example-topic",
     "quiztype": "MULTIPLE_CHOICE",
-    "description": "demo example",
+    "description": "example-description",
     "difficultylevel": "HARD",
     "numberofquestions": 20,
 }
@@ -137,7 +129,7 @@ A Node.js and Express-based API that handles data storage and processing by usin
 
 `POST /api/quiz/attempt/:quizId` – Start a quiz attempt.
 
-`POST /api/quiz/submit/:attemptId` – Submit quiz answers.
+`POST /api/quiz/submit/:attemptId`
 ```json
 {
     "answers": [
@@ -166,10 +158,14 @@ A Node.js and Express-based API that handles data storage and processing by usin
 
 - Frontend can be deployed using Vercel, Netlify, or Firebase Hosting.
 - Backend can be deployed using Render, AWS, or DigitalOcean.
+- **Client:** [Live Demo](https://ai-quiz-app-phi.vercel.app)
+- **Server:** [API Server](https://ai-quiz-app-be.vercel.app)
+- **Image Upload Api:** [Api Documentaion](https://github.com/Subhendu-Kumar/media-cloud-bridge/blob/main/README.md)
+- **Ai Api:** [Api Documentation](https://kidjig.gitbook.io/kidjig-docs)
 
 ## 👨‍💻 Author
 
-`Subhendu Kumar` – Developer
+`[Subhendu Kumar](https://www.linkedin.com/in/subhendu-kumar-dutta)` – Developer
 
 ## 📄 License
 
