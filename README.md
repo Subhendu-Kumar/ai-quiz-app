@@ -165,7 +165,7 @@ A Node.js and Express-based API that handles data storage and processing by usin
 
 ## 👨‍💻 Author
 
-`[Subhendu Kumar](https://www.linkedin.com/in/subhendu-kumar-dutta)` – Developer
+[Subhendu Kumar](https://www.linkedin.com/in/subhendu-kumar-dutta) – Developer
 
 ## 📄 License
 
