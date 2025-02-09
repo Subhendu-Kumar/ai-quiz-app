@@ -106,3 +106,12 @@ export const getQuizAnalytics = async (attemptId: string) => {
     throw new Error(error instanceof Error ? error.message : String(error));
   }
 };
+
+export const getUserAnalytics = async () => {
+  try {
+    const res = await API.get("/quiz/analytics/my");
+    return res;
+  } catch (error) {
+    throw new Error(error instanceof Error ? error.message : String(error));
+  }
+};

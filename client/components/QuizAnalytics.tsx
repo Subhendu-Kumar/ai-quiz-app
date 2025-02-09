@@ -18,6 +18,7 @@ import { MdCalendarMonth } from "react-icons/md";
 import { BsFillSkipForwardFill } from "react-icons/bs";
 import React, { use, useEffect, useState } from "react";
 import { FaHandPointUp, FaRegCheckCircle } from "react-icons/fa";
+import Link from "next/link";
 
 const QuizAnalytics = ({
   params,
@@ -76,10 +77,13 @@ const QuizAnalytics = ({
   return (
     <div className="w-full min-h-screen p-20 pb-4 absolute">
       <div className="flex w-full h-14 items-center justify-between gap-2 px-4 py-1 bg-zinc-50 border-b border-gray-400 fixed top-0 left-0">
-        <div className="flex items-center justify-center gap-2">
+        <Link
+          href={"/dashboard"}
+          className="flex items-center justify-center gap-2"
+        >
           <img src="/logo.svg" alt="app logo" className="w-12 h-12" />
           <p className="text-3xl font-semibold font-sans">Quizlytic</p>
-        </div>
+        </Link>
         <p className="text-2xl font-semibold font-sans">Analytics page</p>
         <div className="flex items-center justify-center gap-3">
           <Button className="bg-green-500 hover:bg-green-500/90">

@@ -37,7 +37,7 @@ const DashboardHome = () => {
             <p className="text-base text-center font-sans font-semibold text-white">
               use our quiz editor to create quiz of your choice
             </p>
-            <Button variant="secondary" className="mt-4">
+            <Button variant="secondary" className="mt-4" disabled>
               create quiz
             </Button>
           </div>

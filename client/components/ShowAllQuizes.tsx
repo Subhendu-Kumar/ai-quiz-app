@@ -86,9 +86,9 @@ const ShowAllQuizes = () => {
               key={idx}
               variant="secondary"
               onClick={() => handleClick(quiz.id)}
-              className="w-full relative h-40 bg-orange-50 flex items-start justify-between flex-col rounded-lg p-4"
+              className="w-full relative h-40 bg-rose-50 hover:bg-rose-100 flex transition-all duration-200 ease-in-out items-start justify-between flex-col rounded-lg p-4"
             >
-              <div className="absolute top-4 right-4 p-2 rounded-full flex items-center justify-center bg-orange-200">
+              <div className="absolute top-4 right-4 p-2 rounded-full flex items-center justify-center bg-rose-100">
                 <FaArrowRight />
               </div>
               <div className="w-full h-auto flex flex-col items-start justify-start">

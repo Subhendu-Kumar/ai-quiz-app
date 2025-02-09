@@ -123,3 +123,23 @@ export interface StatsData {
   accuracy?: string;
   percentage?: number;
 }
+
+export interface UserAnalytics {
+  user: {
+    email: string;
+    avatar: string;
+    username: string;
+  };
+  date: string;
+  message: string;
+  success: boolean;
+  totalAccuracy: number;
+  totalQuestions: number;
+  totalMarksLost: number;
+  highestScoreOfAll: number;
+  totalSecuredMarks: number;
+  totalQuizAttempted: number;
+  totalSkippedQuestions: number;
+  totalAttemptedQuestions: number;
+  averageScorePerQuizAttempt: number;
+}

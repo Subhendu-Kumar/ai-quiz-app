@@ -668,7 +668,20 @@ export const getAnalytics = async (
     const totalMarksLost = totalAttemptedQuestions - totalSecuredMarks;
     const averageScorePerQuizAttempt =
       totalQuizAttempted > 0 ? totalSecuredMarks / totalQuizAttempted : 0;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        email: true,
+        avatar: true,
+        username: true,
+      },
+    });
+    const date = new Date();
     res.json({
+      user,
+      date,
       success: true,
       totalAccuracy,
       totalQuestions,
