@@ -8,6 +8,14 @@ A Nextjs-based web application that provides an intuitive UI for users.
 #### Backend:
 A Node.js and Express-based API that handles data storage and processing by using TypeScript and Prisma for mongodb.
 
+### Deployments
+- **Client:** [Live Demo](https://ai-quiz-app-phi.vercel.app)
+- **Server:** [API Server](https://ai-quiz-app-be.vercel.app)
+
+### External API used
+- **Image Upload Api:** [Api Documentaion](https://github.com/Subhendu-Kumar/media-cloud-bridge/blob/main/README.md)
+- **Ai Api:** [Api Documentation](https://kidjig.gitbook.io/kidjig-docs)
+
 ## Features
 
 #### 🌟 Frontend Features
