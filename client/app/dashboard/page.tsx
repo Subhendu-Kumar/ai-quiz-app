@@ -29,7 +29,7 @@ const DashboardHome = () => {
     <div className="w-full p-10 min-h-screen select-none">
       <div className="w-full h-auto grid sm:grid-cols-2 grid-cols-1 gap-4">
         <div className="w-full h-72 rounded-lg bg-[#19444A] flex items-center justify-start p-4">
-          <img src="./boy-quiz.svg" className="w-64 h-64" alt="logo" />
+          <img src="/boy-quiz.svg" className="w-64 h-64" alt="logo" />
           <div className="w-full h-full flex items-center justify-center flex-col">
             <h1 className="text-4xl font-sans font-semibold text-white">
               Create a Quiz
@@ -43,7 +43,7 @@ const DashboardHome = () => {
           </div>
         </div>
         <div className="w-full h-72 rounded-lg bg-[#19444A] flex items-center justify-start p-4">
-          <img src="./boy-quiz.svg" className="w-64 h-64" alt="logo" />
+          <img src="/boy-quiz.svg" className="w-64 h-64" alt="logo" />
           <div className="w-full h-full flex items-center justify-center flex-col">
             <h1 className="text-4xl font-sans font-semibold text-white">
               Generate Quiz with AI

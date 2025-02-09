@@ -1,13 +1,24 @@
 "use client";
 
+import {
+  AlertDialog,
+  AlertDialogTitle,
+  AlertDialogAction,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogDescription,
+} from "./ui/alert-dialog";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { Ans, QuizAttempt } from "@/types";
-import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import { useFullscreen } from "@/lib/useFullscreen";
 import AlertDialogLoader from "./AlertDialogLoader";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import React, { use, useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { getQuizByAttemptId, submitQuizTest } from "@/api";
 
 const QuizTestPage = ({
@@ -27,6 +38,42 @@ const QuizTestPage = ({
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [questionPresentIndex, setQuestionPresentIndex] = useState<number>(0);
   const [questionsTotalIndexes, setQuestionsTotalIndexes] = useState<number>(0);
+
+  const { enterFullscreen, exitFullscreen } = useFullscreen();
+  const pathname = usePathname();
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement) {
+        setShowModal(true);
+      }
+    };
+    const isFullscreenRoute = /^\/practice\/[^/]+\/attempt\/[^/]+$/.test(
+      pathname
+    );
+    if (isFullscreenRoute) {
+      enterFullscreen();
+      document.addEventListener("fullscreenchange", handleFullscreenChange);
+    }
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      if (!isFullscreenRoute && document.fullscreenElement) {
+        exitFullscreen();
+      }
+    };
+  }, [pathname, enterFullscreen, exitFullscreen]);
+
+  const handleStay = () => {
+    setShowModal(false);
+    enterFullscreen();
+  };
+
+  const handleLeave = () => {
+    exitFullscreen();
+    setShowModal(false);
+    router.push("/dashboard");
+  };
 
   useEffect(() => {
     const fetchAttempt = async () => {
@@ -155,7 +202,22 @@ const QuizTestPage = ({
   }
 
   return (
-    <div className="w-full h-screen p-3">
+    <div className="w-full h-screen p-3" id="testpage">
+      <AlertDialog open={showModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Exit Fullscreen?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You are currently in fullscreen mode for this practice session. Do
+              you want to exit fullscreen?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={handleStay}>Stay</AlertDialogCancel>
+            <AlertDialogAction onClick={handleLeave}>Leave</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
       <AlertDialogLoader
         title="Submitting answers for the quiz test"
         open={submittingAns}
@@ -237,21 +299,14 @@ const QuizTestPage = ({
                 Next
               </Button>
             )}
-            {questionPresentIndex === questionsTotalIndexes - 1 ? (
-              <Button
-                onClick={handleSubmitTest}
-                className="bg-green-500 hover:bg-green-500/90 text-lg font-sans font-semibold"
-              >
-                submit test
-              </Button>
-            ) : (
-              <Button
-                onClick={handleSaveAndNext}
-                className="bg-green-500 hover:bg-green-500/90 text-lg font-sans font-semibold"
-              >
-                Save & Next
-              </Button>
-            )}
+            <Button
+              onClick={handleSaveAndNext}
+              className="bg-green-500 hover:bg-green-500/90 text-lg font-sans font-semibold"
+            >
+              {questionPresentIndex === questionsTotalIndexes - 1
+                ? "Save"
+                : "Save & Next"}
+            </Button>
           </div>
         </div>
         <div className="w-[30%] h-full p-4 border border-gray-200 rounded-lg overflow-hidden">

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useAuth } from "./provider";
 import { useRouter } from "next/navigation";
+import { ImSpinner9 } from "react-icons/im";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -14,7 +15,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     }
   }, [isAuthenticated, loading, router]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <ImSpinner9 className="animate-spin text-4xl" />
+      </div>
+    );
 
   return <>{isAuthenticated ? children : null}</>;
 };

@@ -4,6 +4,7 @@ import { Attempt } from "@/types";
 import { attemptQuiz } from "@/api";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 import { FaArrowRotateRight } from "react-icons/fa6";
 import React, { use, useEffect, useState } from "react";
 
@@ -13,8 +14,10 @@ const ShowStartPractice = ({
   params: Promise<{ quizid: string }>;
 }) => {
   const router = useRouter();
+  const { toast } = useToast();
   const { quizid } = use(params);
   const [loading, setLoading] = useState<boolean>(false);
+  const [completed, setCompleted] = useState<boolean>(false);
   const [attempt, setAttempt] = useState<Attempt | null>(null);
 
   useEffect(() => {
@@ -24,12 +27,27 @@ const ShowStartPractice = ({
         const res = await attemptQuiz(quizid);
         if (res.data.success) {
           setAttempt(res.data.attempt);
+          setCompleted(false);
           if (res.data.existing && res.data.attempt.completed) {
+            setCompleted(true);
             router.replace(`/analytics/${res.data.attempt.id}`);
           }
+        } else {
+          toast({
+            title: "Error",
+            description: res.data.message,
+            variant: "destructive",
+          });
+          router.push("/dashboard");
         }
       } catch (error) {
         console.log(error);
+        toast({
+          title: "Error",
+          description: "Something went wrong",
+          variant: "destructive",
+        });
+        router.push("/dashboard");
       } finally {
         setLoading(false);
       }
@@ -144,7 +162,7 @@ const ShowStartPractice = ({
         </p>
       </div>
       <div className="w-full flex items-center justify-center mt-6">
-        <Button className="w-[20%]" onClick={handleClick}>
+        <Button className="w-[20%]" onClick={handleClick} disabled={completed}>
           Start quiz
         </Button>
       </div>
