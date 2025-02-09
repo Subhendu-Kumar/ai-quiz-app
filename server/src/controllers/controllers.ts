@@ -535,8 +535,12 @@ export const submitResponse = async (
       message: "Responses submitted successfully",
     });
   } catch (error) {
-    console.error("Error submitting responses:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error(error);
+    res.json({
+      success: false,
+      message: "Internal server error",
+      error,
+    });
   }
 };
 
@@ -550,65 +554,139 @@ export const getAnalyticsByAttemptId = async (
     res.json({ success: false, message: "quiz id not provided!!" });
     return;
   }
-  const existingAttempt = await prisma.quizAttempt.findFirst({
-    where: {
-      AND: [{ id: attemptId }, { userId }],
-    },
-    include: {
-      responses: true,
-      quiz: {
-        include: {
-          questions: true,
+  try {
+    const existingAttempt = await prisma.quizAttempt.findFirst({
+      where: {
+        AND: [{ id: attemptId }, { userId }],
+      },
+      include: {
+        responses: true,
+        quiz: {
+          include: {
+            questions: true,
+          },
         },
       },
-    },
-  });
-  if (!existingAttempt) {
+    });
+    if (!existingAttempt) {
+      res.json({
+        success: false,
+        message: "quiz attempt not found for the user",
+      });
+      return;
+    }
+    if (!existingAttempt.completed) {
+      res.json({ success: false, message: "quiz attempt is not completed" });
+      return;
+    }
+    const attempt = await prisma.quizAttempt.findFirst({
+      where: {
+        AND: [{ id: attemptId }, { userId }],
+      },
+      include: {
+        quiz: true,
+      },
+    });
+    const { quiz, responses } = existingAttempt;
+    const totalNoOfQuestions = quiz.questions.length;
+    const noOfQuestionsAttempted = responses.length;
+    const percentageComplete =
+      (noOfQuestionsAttempted / totalNoOfQuestions) * 100;
+    const securedMark = existingAttempt.score;
+    const incorrectAns = noOfQuestionsAttempted - securedMark;
+    const noOfQuestionsSkipped = totalNoOfQuestions - noOfQuestionsAttempted;
+    const accuracy =
+      noOfQuestionsAttempted > 0
+        ? (securedMark / noOfQuestionsAttempted) * 100
+        : 0;
+    res.json({
+      success: true,
+      message: "Successfully fetched analytics",
+      totalNoOfQuestions,
+      noOfQuestionsAttempted,
+      securedMark,
+      incorrectAns,
+      noOfQuestionsSkipped,
+      accuracy: accuracy.toFixed(2),
+      percentageComplete: percentageComplete.toFixed(2),
+      attempt,
+    });
+  } catch (error) {
+    console.error(error);
     res.json({
       success: false,
-      message: "quiz attempt not found for the user",
+      message: "Internal server error",
+      error,
     });
-    return;
   }
-  if (!existingAttempt.completed) {
-    res.json({ success: false, message: "quiz attempt is not completed" });
-    return;
-  }
-  const attempt = await prisma.quizAttempt.findFirst({
-    where: {
-      AND: [{ id: attemptId }, { userId }],
-    },
-    include: {
-      quiz: true,
-    },
-  });
-  const { quiz, responses } = existingAttempt;
-  const totalNoOfQuestions = quiz.questions.length;
-  const noOfQuestionsAttempted = responses.length;
-  const percentageComplete =
-    (noOfQuestionsAttempted / totalNoOfQuestions) * 100;
-  const securedMark = existingAttempt.score;
-  const incorrectAns = noOfQuestionsAttempted - securedMark;
-  const noOfQuestionsSkipped = totalNoOfQuestions - noOfQuestionsAttempted;
-  const accuracy =
-    noOfQuestionsAttempted > 0
-      ? (securedMark / noOfQuestionsAttempted) * 100
-      : 0;
-  res.json({
-    success: true,
-    message: "Successfully fetched analytics",
-    totalNoOfQuestions,
-    noOfQuestionsAttempted,
-    securedMark,
-    incorrectAns,
-    noOfQuestionsSkipped,
-    accuracy: accuracy.toFixed(2),
-    percentageComplete: percentageComplete.toFixed(2),
-    attempt,
-  });
 };
 
 export const getAnalytics = async (
   req: Request,
   res: Response
-): Promise<void> => {};
+): Promise<void> => {
+  const { id: userId } = (req as any).user;
+  try {
+    const existingAttempt = await prisma.quizAttempt.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        quiz: {
+          include: {
+            questions: true,
+          },
+        },
+        responses: true,
+      },
+    });
+    if (!existingAttempt || existingAttempt.length === 0) {
+      res.json({
+        success: false,
+        message: "no attempted quiz found for this user!",
+      });
+      return;
+    }
+    const totalQuizAttempted = existingAttempt.length;
+    let totalSecuredMarks = 0;
+    let totalQuestions = 0;
+    let totalAttemptedQuestions = 0;
+    let highestScoreOfAll = 0;
+    existingAttempt.forEach((attempt) => {
+      if (highestScoreOfAll < attempt.score) {
+        highestScoreOfAll = attempt.score;
+      }
+      totalSecuredMarks += attempt.score;
+      totalQuestions += attempt.quiz.questions.length;
+      totalAttemptedQuestions += attempt.responses.length;
+    });
+    const totalSkippedQuestions = totalQuestions - totalAttemptedQuestions;
+    const totalAccuracy =
+      totalAttemptedQuestions > 0
+        ? (totalSecuredMarks / totalAttemptedQuestions) * 100
+        : 0;
+    const totalMarksLost = totalAttemptedQuestions - totalSecuredMarks;
+    const averageScorePerQuizAttempt =
+      totalQuizAttempted > 0 ? totalSecuredMarks / totalQuizAttempted : 0;
+    res.json({
+      success: true,
+      totalAccuracy,
+      totalQuestions,
+      totalMarksLost,
+      highestScoreOfAll,
+      totalSecuredMarks,
+      totalQuizAttempted,
+      totalSkippedQuestions,
+      totalAttemptedQuestions,
+      averageScorePerQuizAttempt,
+      message: "analytics fetched scuccessfully!!",
+    });
+  } catch (error) {
+    console.error(error);
+    res.json({
+      success: false,
+      message: "Internal server error",
+      error,
+    });
+  }
+};

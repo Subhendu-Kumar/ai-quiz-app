@@ -8,8 +8,8 @@ import {
   getRecentQuizes,
   createQuizWithAi,
   getRecentQuizesMe,
-  getAllQuizesPaginated,
   getQuizByAttemptId,
+  getAllQuizesPaginated,
   getAnalyticsByAttemptId,
 } from "../controllers/controllers";
 import { Router } from "express";
@@ -31,9 +31,9 @@ router.get("/quiz/recent", verifyToken, getRecentQuizes);
 router.get("/quiz/recent/me", verifyToken, getRecentQuizesMe);
 router.get("/quiz/list/:page", verifyToken, getAllQuizesPaginated);
 router.get("/quiz/:quizId", verifyToken, getQuizeById);
-router.get("/get/quiz/:attemptId", verifyToken, getQuizByAttemptId)
+router.get("/get/quiz/:attemptId", verifyToken, getQuizByAttemptId);
 
-router.get("/quiz/analytics", verifyToken, getAnalytics);
+router.get("/quiz/analytics/my", verifyToken, getAnalytics);
 router.get("/quiz/analytics/:attemptId", verifyToken, getAnalyticsByAttemptId);
 
 export default router;
